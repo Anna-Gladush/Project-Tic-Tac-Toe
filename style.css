@@ -2,14 +2,14 @@
   margin: 0;
   padding: 0;
 }
+:root {
+  --primary-color: #48B3AF;
+  --secondary-color: #A7E399;
+  --highlight-color: #F6FF99;
+}
 body {
   display: flex;
-}
-.btn {
-  display: grid;
-  grid-template-columns: 50px 50px 50px;
-  grid-template-rows: 50px 50px 50px;
-  gap: 2px;
+  background-color: var(--primary-color);
 }
 .btn-reset,
 .btn-play {
@@ -23,8 +23,11 @@ body {
   margin-left: 10px;
 }
 .cell {
-  background-color: rgb(145, 240, 140);
+  background-color: var(--secondary-color);
   height: 100px;
   width: 100px;
   margin-bottom: 10px;
+}
+.cell:hover {
+  background-color: var(--highlight-color);
 }

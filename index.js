@@ -14,6 +14,9 @@ const Gameboard = (function () {
     gameboard = [[null, null, null], [null, null, null], [null, null, null]];
     console.log(gameboard);
   }
+  const game = () => {
+    
+  }
   return {
     turn,
     reset
@@ -26,7 +29,3 @@ const Gameboard = (function () {
 //   let loss = 0;
 //   let tie = 0;
 // })();
-
-const Game = (function() {
-  const {gameboard} = Gameboard;
-})();
