@@ -1,4 +1,5 @@
 // game, player or gameboard objects
+const cell = document.querySelectorAll('.cell');
 const Gameboard = (function () {
   let gameboard = [[null, null, null], [null, null, null], [null, null, null]];
   const turn = (marker, row, cell) => {
@@ -61,7 +62,6 @@ const Player = function(mark) {
 }
 
 function printSymbol(symbol) {
-  const cell = document.querySelectorAll('.cell');
   cell.forEach((cube) => {
     cube.addEventListener('click', () => {
       if (symbol === 'X') {
@@ -70,6 +70,15 @@ function printSymbol(symbol) {
         cube.style.background  = "#A7E399 url('images/o-symbol.svg') no-repeat center center";
       }
       cube.style.backgroundSize = '80px'
+    })
+  })
+}
+
+function turnSound() {
+  const turn = document.querySelector(`audio[data-key="3"]`);
+  cell.forEach((cube) => {
+    cube.addEventListener('click', () => {
+      turn.play();
     })
   })
 }
