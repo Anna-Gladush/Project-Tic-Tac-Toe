@@ -82,3 +82,13 @@ function turnSound() {
     })
   })
 }
+
+function audioEvent(event) {
+  if (event === 'win') {
+    key = 2;
+  } else if (event === 'tie') {
+    key = 1;
+  }
+  const audio = document.querySelector(`audio[data-key="${key}"]`);
+  audio.play();
+}
