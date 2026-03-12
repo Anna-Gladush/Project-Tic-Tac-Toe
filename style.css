@@ -13,6 +13,9 @@ body {
 }
 .btn-reset,
 .btn-play {
+  background-color: var(--secondary-color);
+  border: none;
+  border-radius: 20px;
   margin-bottom: 2px;
   width: 75px;
   height: 50px;
@@ -30,4 +33,8 @@ body {
 }
 .cell:hover {
   background-color: var(--highlight-color);
+}
+.cell:hover,
+button {
+  cursor: pointer;
 }

@@ -92,3 +92,11 @@ function audioEvent(event) {
   const audio = document.querySelector(`audio[data-key="${key}"]`);
   audio.play();
 }
+
+function resetButtonClick() {
+  reset = document.querySelector('.btn-reset');
+  reset.addEventListener('click', () => {
+    Gameboard.reset();
+  })
+}
+resetButtonClick();
