@@ -8,6 +8,7 @@
   --highlight-color: #F6FF99;
 }
 body {
+  margin: 20px;
   display: flex;
   background-color: var(--primary-color);
 }

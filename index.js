@@ -19,27 +19,27 @@ const Gameboard = (function () {
   const win_check = (marker) => {
     if (gameboard[0].indexOf(null) === -1 && gameboard[1].indexOf(null) === -1 && gameboard[2].indexOf(null) === -1) {
       console.log('Tie');
-      player.tie ++;
+      audioEvent('tie');
       return true;
     } else if (gameboard[0] == [marker, marker, marker] || gameboard[1] == [marker, marker, marker] || gameboard[2] == [marker, marker, marker]) {
       console.log(`${marker} - win`);
-      player.win ++;
+      audioEvent('win');
       return true;
     } else if (gameboard[0][0] === marker && gameboard[0][1] === marker && gameboard[0][2] === marker) {
       console.log(`${marker} - win`);
-      player.win ++;
+      audioEvent('win');
       return true;
     } else if (gameboard[0][0] === marker && gameboard[1][0] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
-      player.win ++;
+      audioEvent('win');
       return true;
     } else if (gameboard[0][1] === marker && gameboard[1][1] === marker && gameboard[2][1] === marker) {
       console.log(`${marker} - win`);
-      player.win ++;
+      audioEvent('win');
       return true;
     } else if (gameboard[0][2] === marker && gameboard[1][2] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
-      player.win ++;
+      audioEvent('win');
       return true;
     }
     return false;
@@ -99,4 +99,40 @@ function resetButtonClick() {
     Gameboard.reset();
   })
 }
+
+function convertUserChoice() {
+  cell.forEach((cube) => {
+    cube.addEventListener('click', () => {
+      const cellID = cube.dataset.id;
+      console.log(cellID);
+      console.log(convertNumberToCell(cellID))
+    })
+  })  
+}
+
+function convertNumberToCell(idx) {
+  idx = Number(idx);
+  switch(idx) {
+    case 1: 
+      return {row: 0, col: 0};
+    case 2: 
+      return {row: 0, col: 1};
+    case 3: 
+      return {row: 0, col: 2};
+    case 4: 
+      return {row: 1, col: 0};
+    case 5: 
+      return {row: 1, col: 1};
+    case 6: 
+      return {row: 1, col: 2};
+    case 7: 
+      return {row: 2, col: 0};
+    case 8: 
+      return {row: 2, col: 1};
+    case 9: 
+      return {row: 2, col: 2};
+  }
+}
 resetButtonClick();
+turnSound();
+convertUserChoice();
