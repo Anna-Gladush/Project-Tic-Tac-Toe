@@ -2,11 +2,11 @@
 const cell = document.querySelectorAll('.cell');
 const Gameboard = (function () {
   let gameboard = [[null, null, null], [null, null, null], [null, null, null]];
-  const turn = (marker, row, cell) => {
-    if (gameboard[row][cell] !== null) {
+  const turn = (marker, row, col) => {
+    if (gameboard[row][col] !== null) {
       return false;
     } else {
-      gameboard[row][cell] = marker;
+      gameboard[row][col] = marker;
       console.log(gameboard);
       win_check(marker);
       return true;
@@ -17,15 +17,20 @@ const Gameboard = (function () {
     console.log(gameboard);
   }
   const win_check = (marker) => {
+    console.log(gameboard[1])
     if (gameboard[0].indexOf(null) === -1 && gameboard[1].indexOf(null) === -1 && gameboard[2].indexOf(null) === -1) {
       console.log('Tie');
       audioEvent('tie');
       return true;
-    } else if (gameboard[0] == [marker, marker, marker] || gameboard[1] == [marker, marker, marker] || gameboard[2] == [marker, marker, marker]) {
+    } else if (JSON.stringify(gameboard[0]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[1]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[2]) == JSON.stringify([marker, marker, marker])) {
       console.log(`${marker} - win`);
       audioEvent('win');
       return true;
-    } else if (gameboard[0][0] === marker && gameboard[0][1] === marker && gameboard[0][2] === marker) {
+    } else if (gameboard[0][0] === marker && gameboard[1][1] === marker && gameboard[2][2] === marker) {
+      console.log(`${marker} - win`);
+      audioEvent('win');
+      return true;
+    } else if (gameboard[0][2] === marker && gameboard[1][1] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
       audioEvent('win');
       return true;
@@ -104,8 +109,8 @@ function convertUserChoice() {
   cell.forEach((cube) => {
     cube.addEventListener('click', () => {
       const cellID = cube.dataset.id;
-      console.log(cellID);
-      console.log(convertNumberToCell(cellID))
+      const turnChoice = convertNumberToCell(cellID);
+      Gameboard.turn('X', turnChoice.row, turnChoice.col)
     })
   })  
 }
@@ -133,6 +138,7 @@ function convertNumberToCell(idx) {
       return {row: 2, col: 2};
   }
 }
+
 resetButtonClick();
 turnSound();
 convertUserChoice();
