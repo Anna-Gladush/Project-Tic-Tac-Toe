@@ -71,7 +71,7 @@ function printSymbol(symbol) {
     cube.addEventListener('click', () => {
       if (symbol === 'X') {
         cube.style.background  = "#A7E399 url('images/x-symbol.svg') no-repeat center center";
-      } else {
+      } else if (symbol === 'O') {
         cube.style.background  = "#A7E399 url('images/o-symbol.svg') no-repeat center center";
       }
       cube.style.backgroundSize = '80px'
@@ -95,6 +95,7 @@ function audioEvent(event) {
     key = 1;
   }
   const audio = document.querySelector(`audio[data-key="${key}"]`);
+  if (key === 2) { audio.playbackRate = 2}
   audio.play();
 }
 
@@ -102,6 +103,7 @@ function resetButtonClick() {
   reset = document.querySelector('.btn-reset');
   reset.addEventListener('click', () => {
     Gameboard.reset();
+    cell.forEach((elem) => elem.style.background = "#A7E399");
   })
 }
 
@@ -110,7 +112,9 @@ function convertUserChoice() {
     cube.addEventListener('click', () => {
       const cellID = cube.dataset.id;
       const turnChoice = convertNumberToCell(cellID);
-      Gameboard.turn('X', turnChoice.row, turnChoice.col)
+      
+      Gameboard.turn('O', turnChoice.row, turnChoice.col);
+      printSymbol('O');
     })
   })  
 }
@@ -139,6 +143,14 @@ function convertNumberToCell(idx) {
   }
 }
 
+function menu() {
+  start = document.querySelector('.start')
+  startBTN = document.querySelector('.btn-start')
+  startBTN.addEventListener('click', () => {
+    start.style.visibility = "hidden";
+})
+}
 resetButtonClick();
 turnSound();
 convertUserChoice();
+menu()

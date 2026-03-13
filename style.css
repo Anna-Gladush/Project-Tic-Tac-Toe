@@ -15,7 +15,30 @@ body {
   align-items: center;
   justify-content: center;
 }
-.btn-reset {
+.start {
+  background-color: var(--primary-color);
+  height: 100vh;
+  width: 50vw;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: var(--secondary-color);
+}
+.start h1 {
+  margin-bottom: 40px;
+  font-size: 4em;
+  text-shadow: 5px 5px 5px var(--primary-dark-color);
+}
+.start h2 {
+  margin-bottom: 40px;
+  font-size: 3em;
+  text-shadow: 5px 5px 5px var(--primary-dark-color);
+
+}
+.btn-reset,
+.btn-start {
   background-color: var(--secondary-color);
   color: var(--primary-color);
   border: none;
