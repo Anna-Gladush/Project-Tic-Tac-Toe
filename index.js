@@ -108,13 +108,15 @@ function resetButtonClick() {
 }
 
 function convertUserChoice() {
+  let marker = 'X'
   cell.forEach((cube) => {
     cube.addEventListener('click', () => {
       const cellID = cube.dataset.id;
       const turnChoice = convertNumberToCell(cellID);
       
-      Gameboard.turn('O', turnChoice.row, turnChoice.col);
-      printSymbol('O');
+      Gameboard.turn(marker, turnChoice.row, turnChoice.col);
+      printSymbol(marker);
+      marker = marker === 'X' ? 'O' : 'X';
     })
   })  
 }
@@ -150,7 +152,15 @@ function menu() {
     start.style.visibility = "hidden";
 })
 }
+
+// function game() {
+//   let bookmark = 'X'
+//   while (bookmark === 'X' || bookmark === 'O') {
+//     convertNumberToCell(bookmark);
+//     bookmark = bookmark === 'X' ? 'O' : 'X';
+//   }
+// }
+menu();
 resetButtonClick();
 turnSound();
-convertUserChoice();
-menu()
+convertUserChoice()
