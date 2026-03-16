@@ -4,6 +4,7 @@ const DOMmanipulation = (() => {
     reset = document.querySelector('.btn-reset');
     reset.addEventListener('click', () => {
       Gameboard.reset();
+      PlayerStats.resetVictory();
       cell.forEach((elem) => {
         elem.style.background = "#A7E399";
         elem.dataset.filled = 'no'
@@ -63,30 +64,37 @@ const Gameboard = (function () {
   const win_check = (marker) => {
     if (gameboard[0].indexOf(null) === -1 && gameboard[1].indexOf(null) === -1 && gameboard[2].indexOf(null) === -1) {
       console.log('Tie');
+      PlayerStats.giveVictory("tie");
       DOMmanipulation.audioEvent('tie');
       return true;
     } else if (JSON.stringify(gameboard[0]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[1]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[2]) == JSON.stringify([marker, marker, marker])) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     } else if (gameboard[0][0] === marker && gameboard[1][1] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     } else if (gameboard[0][2] === marker && gameboard[1][1] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     } else if (gameboard[0][0] === marker && gameboard[1][0] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     } else if (gameboard[0][1] === marker && gameboard[1][1] === marker && gameboard[2][1] === marker) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     } else if (gameboard[0][2] === marker && gameboard[1][2] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
+      PlayerStats.giveVictory(marker);
       DOMmanipulation.audioEvent('win');
       return true;
     }
@@ -98,16 +106,33 @@ const Gameboard = (function () {
   }
 })();
 
-const Player = function(mark) {
-  let marker = mark;
-  let win = 0;
+const PlayerStats = (function() {
+  let x_win = 0;
+  let o_win = 0;
   let tie = 0;
-  return {
-    marker,
-    win,
-    tie
+  const giveVictory = (marker) => {
+    if (marker === 'X') {
+      x_win++;
+    } else if (marker === 'O') {
+      o_win++;
+    } else if (marker === 'tie') {
+      tie++;
+    }
   }
-}
+  const getVictory = () => {
+    return {x_win, o_win, tie}
+  }
+  const resetVictory = () => {
+    x_win = 0;
+    o_win = 0;
+    tie = 0;
+  }
+  return {
+    giveVictory,
+    getVictory,
+    resetVictory
+  }
+})();
 
 function printSymbol() {
   let marker = 'X'
@@ -161,3 +186,5 @@ DOMmanipulation.resetButtonClick();
 DOMmanipulation.turnSound();
 printSymbol();
 
+PlayerStats.giveVictory("X")
+console.log(PlayerStats.getVictory())
