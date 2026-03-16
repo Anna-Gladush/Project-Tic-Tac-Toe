@@ -1,13 +1,15 @@
 // game, player or gameboard objects
+const cell = document.querySelectorAll('.cell');
 const DOMmanipulation = (() => {
   const resetButtonClick = () => {
     reset = document.querySelector('.btn-reset');
     reset.addEventListener('click', () => {
+      document.documentElement.style.setProperty('--cursor-hover', 'pointer');
       Gameboard.reset();
       PlayerStats.resetVictory();
       cell.forEach((elem) => {
         elem.style.background = "#A7E399";
-        elem.dataset.filled = 'no'
+        elem.dataset.filled = 'no';
       });
     })
   };
@@ -44,15 +46,16 @@ const DOMmanipulation = (() => {
   }
 })();
 
-const cell = document.querySelectorAll('.cell');
 const Gameboard = (function () {
   let gameboard = [[null, null, null], [null, null, null], [null, null, null]];
   const turn = (marker, row, col) => {
-    if (gameboard[row][col] !== null) {
+    if (gameboard[row][col] !== null || marker === false) {
+      return false;
+    } else if (win_check('X') === true || win_check('O') === true) {
+      document.documentElement.style.setProperty('--cursor-hover', 'not-allowed');
       return false;
     } else {
       gameboard[row][col] = marker;
-      // printSymbol(marker);
       console.log(gameboard);
       win_check(marker);
       return marker;
@@ -61,48 +64,101 @@ const Gameboard = (function () {
   const reset = () => {
     gameboard = [[null, null, null], [null, null, null], [null, null, null]];
   }
+  const win_with_dom = (type) => {
+      PlayerStats.giveVictory(type);
+      DOMmanipulation.audioEvent(type);
+      return true;
+  }
   const win_check = (marker) => {
     if (gameboard[0].indexOf(null) === -1 && gameboard[1].indexOf(null) === -1 && gameboard[2].indexOf(null) === -1) {
       console.log('Tie');
-      PlayerStats.giveVictory("tie");
-      DOMmanipulation.audioEvent('tie');
-      return true;
+      return win_with_dom('tie');
     } else if (JSON.stringify(gameboard[0]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[1]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[2]) == JSON.stringify([marker, marker, marker])) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     } else if (gameboard[0][0] === marker && gameboard[1][1] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     } else if (gameboard[0][2] === marker && gameboard[1][1] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     } else if (gameboard[0][0] === marker && gameboard[1][0] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     } else if (gameboard[0][1] === marker && gameboard[1][1] === marker && gameboard[2][1] === marker) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     } else if (gameboard[0][2] === marker && gameboard[1][2] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
-      PlayerStats.giveVictory(marker);
-      DOMmanipulation.audioEvent('win');
-      return true;
+      return win_with_dom('win');
     }
     return false;
   }
+
+  const printSymbol = (cube, symbol) => {
+    if (symbol === false) {
+      return
+    }
+    if (cube.dataset.filled === 'no') {
+      if (symbol === 'X') {
+        cube.style.background = "#A7E399 url('images/x-symbol.svg') no-repeat center center"
+      } else if (symbol === 'O') {
+        cube.style.background = "#A7E399 url('images/o-symbol.svg') no-repeat center center";
+      }
+      cube.style.backgroundSize = '80px';
+      cube.dataset.filled = 'yes';
+      console.log(symbol);
+    } else {
+      return;
+    }
+  }
+  const convertNumberToCell = (idx) => {
+    idx = Number(idx);
+    switch(idx) {
+      case 1: 
+        return {row: 0, col: 0};
+      case 2: 
+        return {row: 0, col: 1};
+      case 3: 
+        return {row: 0, col: 2};
+      case 4: 
+        return {row: 1, col: 0};
+      case 5: 
+        return {row: 1, col: 1};
+      case 6: 
+        return {row: 1, col: 2};
+      case 7: 
+        return {row: 2, col: 0};
+      case 8: 
+        return {row: 2, col: 1};
+      case 9: 
+        return {row: 2, col: 2};
+    }
+  }
+  const gameTurn = (cube, symbol) => {
+      const cellID = cube.dataset.id;
+      const turnChoice = convertNumberToCell(cellID);
+      const onlyturn = turn(symbol, turnChoice.row, turnChoice.col);
+      console.log(onlyturn);
+      printSymbol(cube, onlyturn);
+      if (onlyturn !== false){
+        symbol = symbol === 'X' ? 'O' : 'X'
+      };
+      return symbol;
+  }
+
+  const game = () => {
+    let marker = 'X'
+    cell.forEach((cube) => {
+      cube.addEventListener('click', function handleClick() {
+        marker = gameTurn(cube, marker);
+      })
+    })
+  }
   return {
     turn,
-    reset
+    reset,
+    game
   }
 })();
 
@@ -134,57 +190,10 @@ const PlayerStats = (function() {
   }
 })();
 
-function printSymbol() {
-  let marker = 'X'
-  cell.forEach((cube) => {
-    cube.addEventListener('click', () => {
-      const cellID = cube.dataset.id;
-      const turnChoice = convertNumberToCell(cellID);
-      const turn = Gameboard.turn(marker, turnChoice.row, turnChoice.col);
-      console.log(turn);
-      
-      if (cube.dataset.filled === 'no') {
-        if (turn === 'X') {cube.style.background = "#A7E399 url('images/x-symbol.svg') no-repeat center center"} else { cube.style.background = "#A7E399 url('images/o-symbol.svg') no-repeat center center";}
-        cube.style.backgroundSize = '80px';
-        cube.dataset.filled = 'yes';
-        console.log(turn);
-        if (turn !== false){marker = marker === 'X' ? 'O' : 'X';};
-      } else {
-        return;
-      }
-    })
-  })
-}
-
-function convertNumberToCell(idx) {
-  idx = Number(idx);
-  switch(idx) {
-    case 1: 
-      return {row: 0, col: 0};
-    case 2: 
-      return {row: 0, col: 1};
-    case 3: 
-      return {row: 0, col: 2};
-    case 4: 
-      return {row: 1, col: 0};
-    case 5: 
-      return {row: 1, col: 1};
-    case 6: 
-      return {row: 1, col: 2};
-    case 7: 
-      return {row: 2, col: 0};
-    case 8: 
-      return {row: 2, col: 1};
-    case 9: 
-      return {row: 2, col: 2};
-  }
-}
-
 
 DOMmanipulation.menu();
 DOMmanipulation.resetButtonClick();
 DOMmanipulation.turnSound();
-printSymbol();
+Gameboard.game();
 
-PlayerStats.giveVictory("X")
-console.log(PlayerStats.getVictory())
+console.log(PlayerStats.getVictory());

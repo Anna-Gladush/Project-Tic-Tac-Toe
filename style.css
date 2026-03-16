@@ -7,6 +7,7 @@
   --primary-dark-color:rgb(41, 108, 106);
   --secondary-color: #A7E399;
   --highlight-color: #F6FF99;
+  --cursor-hover: pointer;
 }
 body {
   display: flex;
@@ -70,9 +71,10 @@ body {
 .cell:hover {
   background-color: var(--highlight-color);
 }
-.cell:hover,
+.cell:hover {
+  cursor: var(--cursor-hover);
+}
 button {
   cursor: pointer;
 }
-
 /* cursor: not-allowed; */
