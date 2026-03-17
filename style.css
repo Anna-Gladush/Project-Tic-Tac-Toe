@@ -77,4 +77,23 @@ body {
 button {
   cursor: pointer;
 }
-/* cursor: not-allowed; */
+.meta-info {
+  margin-top: 20px;
+  font-size: 1.7em;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+}
+.meta-info span:first-child {
+  margin-left: 4em;
+}
+.meta-info span {
+  margin-right: 2em;
+}
+.meta-info p:last-child {
+  margin-left: 2em;
+  visibility: hidden;
+}
