@@ -6,7 +6,7 @@ const DOMmanipulation = (() => {
     reset.addEventListener('click', () => {
       document.documentElement.style.setProperty('--cursor-hover', 'pointer');
       Gameboard.reset();
-      PlayerStats.resetVictory();
+      
       cell.forEach((elem) => {
         elem.style.background = "#A7E399";
         elem.dataset.filled = 'no';
@@ -48,10 +48,11 @@ const DOMmanipulation = (() => {
 
 const Gameboard = (function () {
   let gameboard = [[null, null, null], [null, null, null], [null, null, null]];
+  let win = 1;
   const turn = (marker, row, col) => {
     if (gameboard[row][col] !== null || marker === false) {
       return false;
-    } else if (win_check('X') === true || win_check('O') === true) {
+    } else if (win === 0) {
       document.documentElement.style.setProperty('--cursor-hover', 'not-allowed');
       return false;
     } else {
@@ -63,42 +64,44 @@ const Gameboard = (function () {
   }
   const reset = () => {
     gameboard = [[null, null, null], [null, null, null], [null, null, null]];
+    win = 1;
   }
-  const win_with_dom = (type) => {
-      PlayerStats.giveVictory(type);
-      DOMmanipulation.audioEvent(type);
-      return true;
+  const win_with_dom = (type, marker = 'tie') => {
+    win--;
+    PlayerStats.giveVictory(marker);
+    DOMmanipulation.audioEvent(type);
+    return true;
   }
   const win_check = (marker) => {
+    if (win === 0) {
+      return;
+    }
     if (gameboard[0].indexOf(null) === -1 && gameboard[1].indexOf(null) === -1 && gameboard[2].indexOf(null) === -1) {
       console.log('Tie');
       return win_with_dom('tie');
     } else if (JSON.stringify(gameboard[0]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[1]) == JSON.stringify([marker, marker, marker]) || JSON.stringify(gameboard[2]) == JSON.stringify([marker, marker, marker])) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     } else if (gameboard[0][0] === marker && gameboard[1][1] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     } else if (gameboard[0][2] === marker && gameboard[1][1] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     } else if (gameboard[0][0] === marker && gameboard[1][0] === marker && gameboard[2][0] === marker) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     } else if (gameboard[0][1] === marker && gameboard[1][1] === marker && gameboard[2][1] === marker) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     } else if (gameboard[0][2] === marker && gameboard[1][2] === marker && gameboard[2][2] === marker) {
       console.log(`${marker} - win`);
-      return win_with_dom('win');
+      return win_with_dom('win', marker);
     }
     return false;
   }
 
   const printSymbol = (cube, symbol) => {
-    if (symbol === false) {
-      return
-    }
     if (cube.dataset.filled === 'no') {
       if (symbol === 'X') {
         cube.style.background = "#A7E399 url('images/x-symbol.svg') no-repeat center center"
