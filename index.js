@@ -13,6 +13,17 @@ const DOMmanipulation = (() => {
         elem.dataset.filled = 'no';
       });
     })
+    reset.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        document.documentElement.style.setProperty('--cursor-hover', 'pointer');
+        Gameboard.reset();
+        status.style.visibility = 'hidden';
+        cell.forEach((elem) => {
+          elem.style.background = "#A7E399";
+          elem.dataset.filled = 'no';
+        });
+      }
+    })
   };
   const audioEvent = (event) => {
     if (event === 'win') {
@@ -30,6 +41,11 @@ const DOMmanipulation = (() => {
       cube.addEventListener('click', () => {
         turn.play();
       })
+      cube.addEventListener('keydown', (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          turn.play();
+        }
+      })
     })
   }
     const menu = () => {
@@ -37,7 +53,12 @@ const DOMmanipulation = (() => {
       startBTN = document.querySelector('.btn-start')
       startBTN.addEventListener('click', () => {
         start.style.visibility = "hidden";
-    })
+      })
+      startBTN.addEventListener('keydown', () => {
+        if (e.key === "Enter" || e.key === " ") {
+          start.style.visibility = "hidden";
+        }
+      })
   }
   const stats = () => {
     const stat = document.querySelector('.stats');
@@ -161,8 +182,13 @@ const Gameboard = (function () {
         marker = gameTurn(cube, marker);
         DOMmanipulation.stats();
       })
+      cube.addEventListener("keydown", function handleKeydown() {
+        if (e.key === "Enter" || e.key === " ") {
+          marker = gameTurn(cube, marker);
+          DOMmanipulation.stats();
+        }
+      })
     })
-
   }
   return {
     turn,
